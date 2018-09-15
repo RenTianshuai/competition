@@ -22,32 +22,35 @@ public class ClientSocket {
     }
 
 
-
-    public void sendData(String data){
+    public void sendData(String data) {
         try {
             Socket client = new Socket(host, port);
             Writer writer = new OutputStreamWriter(client.getOutputStream());
             writer.write(data);
             writer.flush();
-//            InputStreamReader reader = new InputStreamReader(client.getInputStream());
+
+            InputStreamReader reader = new InputStreamReader(client.getInputStream());
+            reader.close();
+//            StringBuilder builder = new StringBuilder();
+//            char chars[] = new char[1024];
+//            int len;
+//            while ((len = reader.read(chars)) != -1) {
+//                builder.append(new String(chars, 0, len));
+//            }
+
 //            BufferedReader bufferedInputStream = new BufferedReader(reader);
 //           if(client.getInputStream().available()==0){
 //               System.out.println(bufferedInputStream.readLine());
 //           }
 //           reader.close();
             writer.close();
-//            char chars[] = new char[1024];
-//            int len;
-//            while ((len = reader.read(chars)) != -1) {
-//                builder.append(new String(chars, 0, len));
-//            }
+
 //            System.out.println(builder.toString());
             client.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
 
 }

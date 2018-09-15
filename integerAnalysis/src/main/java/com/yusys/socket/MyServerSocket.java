@@ -58,8 +58,6 @@ public class MyServerSocket {
             }
             String inputFilePath = builder.toString();
             inputFilePath = inputFilePath.substring(6);
-//            System.out.println("Receive from client message=: " + builder);
-
 
             PrintStream printStream = new PrintStream(socket.getOutputStream());
 
@@ -70,6 +68,7 @@ public class MyServerSocket {
             printStream.println(returnData);
 
             reader.close();
+            printStream.close();
             socket.close();
             server.close();
             return returnData;

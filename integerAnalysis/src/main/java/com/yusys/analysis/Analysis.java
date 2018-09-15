@@ -43,12 +43,6 @@ public class Analysis {
         long end = System.currentTimeMillis();
         System.out.println("处理时长约" + (end - start) + "ms");
 
-//        // 发送结果给服务器
-//        System.out.println("...发送服务器...");
-//        ClientSocket client = new ClientSocket(serviceHost, servicePort);
-//        String returnData = getReturnData(outputFilePath);
-//        client.sendData(returnData);
-
     }
 
     // 创建返回服务器数据
@@ -65,8 +59,7 @@ public class Analysis {
      * 一个大于2的整数N，他可能等于比它小的若干个整数（大于等于2并且不等于自己）乘积。
      * 如果存在这样的连续整数，将他们输出，如果没有则输出-1。
      */
-    public String analysis(String inputData) {
-        String result = null;
+    public void analysis(String inputData) {
         FileUtils.createOutputFile(outputFilePath);
 
         String[] inputs = inputData.split("\n");
@@ -75,7 +68,6 @@ public class Analysis {
             FileUtils.writeLine(outputFilePath, singleRes + "\n");
         }
 
-        return result;
     }
 
     /**
