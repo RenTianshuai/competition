@@ -9,6 +9,7 @@ public class ClientSocketTest {
     @Test
     public void sendData() {
         ClientSocket clientSocket = new ClientSocket();
-        clientSocket.sendData("000027/home/jike/intdiv/input.txt");
+        clientSocket.sendData("000027C:\\Users\\XiewzPc\\Desktop\\大赛\\competition\\integerAnalysis\\input.txt");
+
     }
 }

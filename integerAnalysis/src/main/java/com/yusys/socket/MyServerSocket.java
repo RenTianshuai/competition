@@ -1,7 +1,7 @@
 package com.yusys.socket;
 
-import java.io.DataInputStream;
-import java.io.IOException;
+import com.yusys.analysis.Analysis;
+
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -19,27 +19,6 @@ public class MyServerSocket {
     public MyServerSocket() {
     }
 
-    public static void main(String args[]) {
-//        int port = 8919;
-//        try {
-//            ServerSocket server = new ServerSocket(port);
-//            Socket socket = server.accept();
-//            Reader reader = new InputStreamReader(socket.getInputStream());
-//            char chars[] = new char[1024];
-//            int len;
-//            StringBuilder builder = new StringBuilder();
-//            while ((len = reader.read(chars)) != -1) {
-//                builder.append(new String(chars, 0, len));
-//            }
-//            System.out.println("Receive from client message=: " + builder);
-//            reader.close();
-//            socket.close();
-//            server.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-    }
-
     public int getPort() {
         return port;
     }
@@ -55,17 +34,19 @@ public class MyServerSocket {
      * @return
      */
     public String getInputFilePath(){
+        System.out.println("等待服务器发送信息......");
 
-        String inputString = getInputSocketStream();
+        String inputString = acceptAndDeal();
         String inputFilePath = inputString.substring(6); // 去掉字节码长度得到路径
 
         return inputFilePath;
 
     }
 
-    public String getInputSocketStream (){
+    public String acceptAndDeal(){
         try {
             ServerSocket server = new ServerSocket(port);
+            System.out.println("监听端口"+port+"等待服务器发送信息......");
             Socket socket = server.accept();
             Reader reader = new InputStreamReader(socket.getInputStream());
 
@@ -75,11 +56,23 @@ public class MyServerSocket {
             while ((len = reader.read(chars)) != -1) {
                 builder.append(new String(chars, 0, len));
             }
+            String inputFilePath = builder.toString();
+            inputFilePath = inputFilePath.substring(6);
 //            System.out.println("Receive from client message=: " + builder);
+
+
+            PrintStream printStream = new PrintStream(socket.getOutputStream());
+
+            Analysis analysis = new Analysis();
+            analysis.start(inputFilePath);
+            String returnData = analysis.getReturnData(analysis.getOutputFilePath());
+
+            printStream.println(returnData);
+
             reader.close();
             socket.close();
             server.close();
-            return builder.toString();
+            return returnData;
         } catch (Exception e) {
             e.printStackTrace();
         }

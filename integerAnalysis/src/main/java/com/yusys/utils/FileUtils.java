@@ -2,18 +2,35 @@ package com.yusys.utils;
 
 import org.apache.commons.io.IOUtils;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.rmi.server.ExportException;
 
 public class FileUtils {
+
+    public static boolean createOutputFile(String outputPath){
+        String dir = outputPath.replace("output.txt","");
+        File file = new File(dir);
+        file.mkdirs();
+        file = new File(outputPath);
+        try {
+            boolean newFile = file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
     public static boolean saveToFile(String str, String filepath, String encoding) {
         InputStream bis = null;
@@ -43,17 +60,22 @@ public class FileUtils {
      * @throws IOException
      */
     public static String readFromFile(String filePath) {
-        File file = new File(filePath);// 指定要读取的文件
-        FileReader reader = null;// 获取该文件的输入流
-        char[] bb = new char[1024];// 用来保存每次读取到的字符
+
         StringBuilder str = new StringBuilder();// 用来将每次读取到的字符拼接，当然使用StringBuffer类更好
-        int n;// 每次读取到的字符长度
         try {
-            while ((n = reader.read(bb)) != -1) {
-                str.append(bb,0,n);
+            //BufferedReader是可以按行读取文件
+            FileInputStream inputStream = new FileInputStream(filePath);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String lineStr = null;
+            while ((lineStr = bufferedReader.readLine()) != null) {
+                str.append(lineStr+"\n");
             }
-            reader = new FileReader(file);
-            reader.close();// 关闭输入流，释放连接
+
+            inputStream.close();
+            bufferedReader.close();
+
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -65,11 +87,12 @@ public class FileUtils {
 
     /**
      * 从后面追加内容
+     *
      * @param fileName
      * @param content
      * @return
      */
-    public static Boolean writeLine(String fileName,String content){
+    public static Boolean writeLine(String fileName, String content) {
         try {
             // 打开一个写文件器，构造函数中的第二个参数true表示以追加形式写文件
             FileWriter writer = new FileWriter(fileName, true);

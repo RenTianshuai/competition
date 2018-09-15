@@ -1,11 +1,9 @@
-package com.yusys.socket;
+package com.yusys.test;
 
-import org.junit.Test;
+import com.yusys.socket.MyServerSocket;
 
-public class MyServerSocketTest {
-
-    @Test
-    public void getInputFilePath() {
+public class Test {
+    public static void main(String[] args) {
         MyServerSocket server = new MyServerSocket();
         String inputFilePath = server.acceptAndDeal();
         System.out.println(inputFilePath);
