@@ -1,49 +1,40 @@
 package cn.com.yusys.geek.subject1;
 
 
-import java.sql.*;
+import cn.com.yusys.geek.subject1.utils.SQLUtil;
+
+import java.util.List;
+import java.util.Map;
 
 public class Ranking {
-    private static String url = "jdbc:mysql://localhost:3306/message";
-    private static String username = "root";
-    private static String password = "admin";
-    public static void main(String[] args){
-        Connection conn = null;
-        String sql;
-        try {
-            Class.forName("com.mysql.jdbc.Driver");// 动态加载mysql驱动
-            conn = DriverManager.getConnection(url);
-            Statement stmt = conn.createStatement();
-            StringBuffer sql = new StringBuffer();
 
-            int result = stmt.executeUpdate(sql);// executeUpdate语句会返回一个受影响的行数，如果返回-1就没有成功
-            if (result != -1) {
-                System.out.println("创建数据表成功");
-                sql = "insert into student(NO,name) values('2012001','陶伟基')";
-                result = stmt.executeUpdate(sql);
-                sql = "insert into student(NO,name) values('2012002','周小俊')";
-                result = stmt.executeUpdate(sql);
-                sql = "select * from student";
-                ResultSet rs = stmt.executeQuery(sql);// executeQuery会返回结果的集合，否则返回空值
-                System.out.println("学号\t姓名");
-                while (rs.next()) {
-                    System.out
-                            .println(rs.getString(1) + "\t" + rs.getString(2));// 入如果返回的是int类型可以用getInt()
+    public static void main(String[] args){
+        long startTime = System.currentTimeMillis();
+        try {
+            String sql = "select DATA_DT,INDEX_ID from YXKJ_EVAL_RES_LIST group by DATA_DT,INDEX_ID";
+            List<Map<String,Object>> groups = SQLUtil.resultQuery(sql, null);
+            for (Map<String,Object> group : groups){
+                sql = "select DATA_DT,ORG_NO,INDEX_ID from YXKJ_EVAL_RES_LIST where DATA_DT=? and INDEX_ID=? order by INDEX_VAL desc";
+                String[] params1 = new String[2];
+                params1[0] = (String) group.get("DATA_DT");
+                params1[1] = (String) group.get("INDEX_ID");
+                List<Map<String,Object>> ranks = SQLUtil.resultQuery(sql, params1);
+                if (ranks != null){
+                    sql = "update YXKJ_EVAL_RES_LIST set GRP_RANK=? where DATA_DT=? and ORG_NO=? and INDEX_ID=?";
+                    for (int i=0; i<=ranks.size(); i++){
+                        String[] params2 = new String[4];
+                        params2[0] = (i+1)+"";
+                        params2[1] = (String) group.get("DATA_DT");
+                        params2[2] = (String) ranks.get(i).get("ORG_NO");
+                        params2[3] = (String) group.get("INDEX_ID");
+                        SQLUtil.insertData(sql,params2);
+                    }
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            long endTime = System.currentTimeMillis();
+            System.out.println("用时ms：" + (endTime - startTime));
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-
     }
-
-}
 }
