@@ -162,7 +162,6 @@ public class Analysis {
      */
     public String calculateSingle2(String integerNum) {
         StringBuffer resultStr = new StringBuffer("[");
-        String res = null;
         Long integer = 0L;
         try {
             integer = new Long(integerNum);
@@ -171,8 +170,6 @@ public class Analysis {
             return "输入格式错误！";
         }
         long maxCalNum = integer / 2;
-        long forjNum = maxCalNum;
-        boolean isNotFirst = false;
         long contNum = 0; // 记录相乘的数字个数
         long maxI = maxCalNum; // 开始计算的数的最大的值
 
@@ -193,7 +190,7 @@ public class Analysis {
                 resultStr.append("]");
                 break;
             }
-            resultStr.append(",");
+            resultStr.append(" ");
             if (mulResult > integer) {
                 resultStr = new StringBuffer("[");
                 break;
@@ -221,9 +218,9 @@ public class Analysis {
                     long left = midInt - i + 1; // 2
                     long right = midInt + i;
                     tempResult *= left * right;
-                    result2.insert(1, left + ",");
+                    result2.insert(1, left + " ");
                     if (i != 1)
-                        result2.append(",");
+                        result2.append(" ");
                     result2.append(right);
                 }
                 result2.append("]");
@@ -232,7 +229,8 @@ public class Analysis {
                     // 拼字符串
                     if (resultStr.toString().endsWith("]")) {
                         resultStr.append("," + result2);
-                    }
+                    }else
+                        resultStr = result2;
                 }
             } else { // 奇数个 // 3*4*5
                 long tempResult = midInt;
@@ -241,14 +239,15 @@ public class Analysis {
                     long left = midInt - i;
                     long right = midInt + i;
                     tempResult *= left * right;
-                    result2.insert(1, left + ",").append("," + right);
+                    result2.insert(1, left + " ").append(" " + right);
                 }
 
                 result2.append("]");
                 if (tempResult == integer) {
                     if (resultStr.toString().endsWith("]")) {
                         resultStr.append("," + result2);
-                    }
+                    }else
+                        resultStr = result2;
                 }
             }
 
