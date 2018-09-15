@@ -28,15 +28,21 @@ public class ClientSocket {
             Writer writer = new OutputStreamWriter(client.getOutputStream());
             writer.write(data);
             writer.flush();
+            client.shutdownOutput();
 
 
             InputStreamReader reader = new InputStreamReader(client.getInputStream());
 
             BufferedReader br = new BufferedReader(reader);
             System.out.println(br);
-//            while (client.getInputStream().available() == 0) {
-//            }
-//            String s = br.readLine();
+            while (true) {
+                if(client.getInputStream().available() == 0){
+
+                }else {
+                    System.out.println(br.readLine());
+                    break;
+                }
+            }
 //            String s = br.readLine();
             reader.close();
             writer.close();

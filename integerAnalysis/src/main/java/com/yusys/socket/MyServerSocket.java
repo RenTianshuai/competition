@@ -60,7 +60,7 @@ public class MyServerSocket {
             }
             String inputFilePath = builder.toString();
             inputFilePath = inputFilePath.substring(6);
-
+            socket.shutdownInput();
 
             Analysis analysis = new Analysis();
             analysis.start(inputFilePath);
@@ -74,10 +74,9 @@ public class MyServerSocket {
             printStream.flush();
             printStream.close();
 
-//            writer.close();
-//            reader.close();
-//            socket.close();
-//            server.close();
+            reader.close();
+            socket.close();
+            server.close();
             return returnData;
         } catch (Exception e) {
             e.printStackTrace();

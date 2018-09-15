@@ -1,6 +1,7 @@
 package com.yusys.analysis;
 
 import org.junit.Test;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.security.AlgorithmParameterGenerator;
 
@@ -21,6 +22,13 @@ public class AnalysisTest {
         Analysis analysis = new Analysis();
         String returnData = analysis.getReturnData("/home/jike/intdiv/分组名/output.txt");
         System.out.println(returnData);
+    }
+    @Test
+    public void calculateSingle2Test(){
+        double pow = Math.pow(8, 1 / 2D);
+        System.out.println(pow);
+        long round = Math.round(pow);
+        System.out.println(round);
     }
 
     @Test
