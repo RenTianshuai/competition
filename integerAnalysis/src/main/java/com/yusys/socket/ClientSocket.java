@@ -29,22 +29,17 @@ public class ClientSocket {
             writer.write(data);
             writer.flush();
 
+
             InputStreamReader reader = new InputStreamReader(client.getInputStream());
-            reader.close();
-//            StringBuilder builder = new StringBuilder();
-//            char chars[] = new char[1024];
-//            int len;
-//            while ((len = reader.read(chars)) != -1) {
-//                builder.append(new String(chars, 0, len));
+
+            BufferedReader br = new BufferedReader(reader);
+            System.out.println(br);
+//            while (client.getInputStream().available() == 0) {
 //            }
-
-//            BufferedReader bufferedInputStream = new BufferedReader(reader);
-//           if(client.getInputStream().available()==0){
-//               System.out.println(bufferedInputStream.readLine());
-//           }
-//           reader.close();
+//            String s = br.readLine();
+//            String s = br.readLine();
+            reader.close();
             writer.close();
-
 //            System.out.println(builder.toString());
             client.close();
         } catch (IOException e) {

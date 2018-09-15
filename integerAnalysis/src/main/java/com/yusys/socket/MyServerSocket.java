@@ -3,8 +3,10 @@ package com.yusys.socket;
 import com.yusys.analysis.Analysis;
 
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -59,18 +61,23 @@ public class MyServerSocket {
             String inputFilePath = builder.toString();
             inputFilePath = inputFilePath.substring(6);
 
-            PrintStream printStream = new PrintStream(socket.getOutputStream());
 
             Analysis analysis = new Analysis();
             analysis.start(inputFilePath);
             String returnData = analysis.getReturnData(analysis.getOutputFilePath());
 
+//            Writer writer = new OutputStreamWriter(socket.getOutputStream());
+//            writer.write(returnData);
+//            writer.flush();
+            PrintStream printStream = new PrintStream(socket.getOutputStream());
             printStream.println(returnData);
-
-            reader.close();
+            printStream.flush();
             printStream.close();
-            socket.close();
-            server.close();
+
+//            writer.close();
+//            reader.close();
+//            socket.close();
+//            server.close();
             return returnData;
         } catch (Exception e) {
             e.printStackTrace();
