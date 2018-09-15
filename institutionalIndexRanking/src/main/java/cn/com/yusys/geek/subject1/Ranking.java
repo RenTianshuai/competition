@@ -9,6 +9,7 @@ import java.util.Map;
 public class Ranking {
 
     public static void main(String[] args){
+        long startTime = System.currentTimeMillis();
         try {
             String sql = "select DATA_DT,INDEX_ID from YXKJ_EVAL_RES_LIST group by DATA_DT,INDEX_ID";
             List<Map<String,Object>> groups = SQLUtil.resultQuery(sql, null);
@@ -30,6 +31,8 @@ public class Ranking {
                     }
                 }
             }
+            long endTime = System.currentTimeMillis();
+            System.out.println("用时ms：" + (endTime - startTime));
         } catch (Exception e) {
             e.printStackTrace();
         }
