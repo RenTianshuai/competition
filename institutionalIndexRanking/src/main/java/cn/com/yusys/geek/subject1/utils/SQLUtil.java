@@ -11,9 +11,10 @@ import java.util.Map;
  */
 public class SQLUtil {
 
-    private static String url = "jdbc:mysql://127.0.0.1:3306/message";
+    private static Connection connection = null;
+    private static String url = "jdbc:mysql://127.0.0.1:3306/cmis";
     private static String user = "root";
-    private static String password = "admin";
+    private static String password = "root";
 
 
     /**
@@ -64,7 +65,6 @@ public class SQLUtil {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            closeConn(conn);
         }
         return resultList;
 
@@ -83,17 +83,17 @@ public class SQLUtil {
             result = pre.executeUpdate();
         } finally {
             pre.close();
-            closeConn(conn);
         }
 
         return result;
     }
 
     public static Connection getConnection() {
-        Connection connection = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(url, user, password);
+            if (connection == null){
+                Class.forName("com.mysql.jdbc.Driver");
+                connection = DriverManager.getConnection(url, user, password);
+            }
             return connection;
         } catch (Exception e) {
             //记录日志
@@ -105,7 +105,7 @@ public class SQLUtil {
     }
 
 
-    public static void closeConn(Connection connection) {
+    public static void closeConn() {
         try {
             connection.close();
         } catch (SQLException e) {
