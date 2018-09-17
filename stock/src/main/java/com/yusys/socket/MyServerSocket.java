@@ -1,7 +1,10 @@
 package com.yusys.socket;
 
 import com.yusys.analysis.Analysis;
+import com.yusys.analysis.StockAnalysis;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
@@ -13,6 +16,42 @@ import java.net.Socket;
 public class MyServerSocket {
 
     int port = 7701;
+
+    public static void main(String[] args) {
+        // declaration section:
+        // declare a server socket and a client socket for the server
+        // declare an input and an output stream
+        ServerSocket echoServer = null;
+        String line;
+        DataInputStream is;
+        PrintStream os;
+        Socket clientSocket = null;
+        // Try to open a server socket on port 9999
+        // Note that we can't choose a port less than 1023 if we are not
+        // privileged users (root)
+        try {
+            echoServer = new ServerSocket(9999);
+        }
+        catch (IOException e) {
+            System.out.println(e);
+        }
+        // Create a socket object from the ServerSocket to listen and accept
+        // connections.
+        // Open input and output streams
+        try {
+            clientSocket = echoServer.accept();
+            is = new DataInputStream(clientSocket.getInputStream());
+            os = new PrintStream(clientSocket.getOutputStream());
+            // As long as we receive data, echo that data back to the client.
+            while (true) {
+                line = is.readLine();
+                os.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+
 
     public MyServerSocket(int port) {
         this.port = port;
@@ -58,22 +97,17 @@ public class MyServerSocket {
             while ((len = reader.read(chars)) != -1) {
                 builder.append(new String(chars, 0, len));
             }
-            String inputFilePath = builder.toString();
-            inputFilePath = inputFilePath.substring(6);
-            socket.shutdownInput();
+            String inputFilePath = builder.toString().substring(6);
 
-            Analysis analysis = new Analysis();
-            analysis.start(inputFilePath);
-            String returnData = analysis.getReturnData(analysis.getOutputFilePath());
+            StockAnalysis analysis = new StockAnalysis();
+            String returnData = analysis.analysis(inputFilePath);
 
-//            Writer writer = new OutputStreamWriter(socket.getOutputStream());
-//            writer.write(returnData);
-//            writer.flush();
             PrintStream printStream = new PrintStream(socket.getOutputStream());
             printStream.println(returnData);
             printStream.flush();
             printStream.close();
 
+//            writer.close();
             reader.close();
             socket.close();
             server.close();
