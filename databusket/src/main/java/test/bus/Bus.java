@@ -5,13 +5,12 @@ import java.util.Map;
 
 public class Bus {
 
-    private String key;
-    private Object value;
-    private Map<String,Bus> subNode = new HashMap<String, Bus>();
+    private Map<Object,Object> value = new HashMap<Object, Object>();
+    private Map<Object,Bus> subBus = new HashMap<Object, Bus>();
 
     @Override
     public String toString() {
-        return "["+key+":"+value+",subNode:"+subNode.get(key)+"]";
+        return "[" + value.toString() + ":" + subBus.toString() + "]";
     }
 
     public boolean put(Object... args) {
@@ -20,15 +19,13 @@ public class Bus {
         }
         int length = args.length;
         if (length == 2){
-            key = (String) args[0];
-            value = args[1];
+            value.put(args[0],args[1]);
         }else{
-            key = (String) args[0];
-            Bus bus = subNode.get(key)==null?new Bus():subNode.get(key);
+            Bus bus = subBus.get(args[0])==null?new Bus():subBus.get(args[0]);
             Object[] newArgs = new Object[length-1];
             System.arraycopy(args,1,newArgs,0,newArgs.length);
             bus.put(newArgs);
-            subNode.put(key,bus);
+            subBus.put(args[0],bus);
         }
         return true;
     }
@@ -38,9 +35,9 @@ public class Bus {
         }
         int length = args.length;
         if (length == 1){
-            return value;
+            return value.get(args[0]);
         }else {
-            Bus bus = subNode.get(args[0]);
+            Bus bus = subBus.get(args[0]);
             if (bus==null){
                 return null;
             }
@@ -56,11 +53,10 @@ public class Bus {
         }
         int length = args.length;
         if (length == 1){
-            key = null;
-            value = null;
-            subNode.clear();
+            value.remove(args[0]);
+            subBus.remove(args[0]);
         }else{
-            Bus bus = subNode.get(args[0]);
+            Bus bus = subBus.get(args[0]);
             if (bus==null){
                 return true;
             }
@@ -75,8 +71,10 @@ public class Bus {
     public static void main(String[] args){
         Bus b = new Bus();
         b.put("1",1);
+        b.put("b",1);
         b.put("1","2",2);
         b.put("1","2","3",3);
+        b.put("1","xx","xx");
 //        b.remove("1");
 //        b.remove("1","2");
 //        b.remove("1","2","3");
