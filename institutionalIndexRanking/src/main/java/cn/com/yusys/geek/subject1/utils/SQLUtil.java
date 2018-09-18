@@ -12,9 +12,9 @@ import java.util.Map;
 public class SQLUtil {
 
     private static Connection connection = null;
-    private static String url = "jdbc:mysql://127.0.0.1:3306/cmis";
+    private static String url = "jdbc:mysql://127.0.0.1:3306/jike";
     private static String user = "root";
-    private static String password = "root";
+    private static String password = "jike";
 
 
     /**
