@@ -28,7 +28,7 @@ public class ClientSocket {
             Writer writer = new OutputStreamWriter(client.getOutputStream());
             writer.write(data);
             writer.flush();
-            client.shutdownOutput();
+            client.shutdownOutput(); // 一定要关闭流
 
 
             InputStreamReader reader = new InputStreamReader(client.getInputStream());
@@ -37,8 +37,9 @@ public class ClientSocket {
             System.out.println(br);
             while (true) {
                 if(client.getInputStream().available() == 0){
-
+                    System.out.print(".");
                 }else {
+                    System.out.println();
                     System.out.println(br.readLine());
                     break;
                 }
