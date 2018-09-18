@@ -191,7 +191,7 @@ public class Analysis {
                 break;
             }
             resultStr.append(" ");
-            if (mulResult > integer) {
+            if (mulResult > integer || mulResult < 0) {
                 resultStr = new StringBuffer("[");
                 break;
             }
